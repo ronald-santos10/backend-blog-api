@@ -14,10 +14,8 @@ const s3 = new S3Client({
 const storage = multerS3({
   s3: s3,
   bucket: process.env.AWS_BUCKET_NAME as string,
-  acl: "public-read",
   contentType: multerS3.AUTO_CONTENT_TYPE,
   key: function (req, file, cb) {
-    // Define o nome do arquivo no S3
     const uniqueFileName = `${uuidv4()}-${file.originalname}`;
     cb(null, `covers/${uniqueFileName}`);
   },
