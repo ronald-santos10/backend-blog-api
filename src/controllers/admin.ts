@@ -1,4 +1,4 @@
-import { response, Response } from "express";
+import {  Response } from "express";
 import { ExtendedRequest } from "../types/extended-request";
 import { z } from "zod";
 import {
@@ -7,7 +7,6 @@ import {
   deletePost,
   getAllPosts,
   getPostBySlug,
-  handleCover,
   publishPost,
   revertPostToDraft,
   updatePost,
