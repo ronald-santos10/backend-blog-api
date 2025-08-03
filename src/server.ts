@@ -15,6 +15,7 @@ server.use("/api", mainRoutes);
 server.use("/api/auth", authRoutes);
 server.use("/api/admin", adminRoutes);
 
-server.listen(4444, () => {
-  console.log("Server is running...");
+const PORT = process.env.PORT || 4444;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

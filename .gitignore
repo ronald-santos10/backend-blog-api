@@ -1,7 +1,30 @@
-.env
+# Node modules
 node_modules/
-tmp/*
-public/images/covers/*
-/src/generated/prisma
 
-/src/generated/prisma
+# Ambientes e variáveis sensíveis
+.env
+.env.local
+
+# Logs
+logs
+*.log
+
+# Diretório temporário
+tmp/
+
+# Imagens de upload (covers)
+public/images/covers/
+
+# Pastas geradas automaticamente
+/dist/
+/build/
+/src/generated/
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
