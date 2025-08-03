@@ -1,11 +1,17 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
+
 import { mainRoutes } from "./routes/main";
 import { authRoutes } from "./routes/auth";
 import { adminRoutes } from "./routes/admin";
 
+
+dotenv.config();
+
 const server = express();
+
 server.use(cors());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
