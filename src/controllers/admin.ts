@@ -76,18 +76,14 @@ export const addPost = async (req: ExtendedRequest, res: Response) => {
   if (!data.success) {
     res.json({ error: data.error.flatten().fieldErrors });
     return;
-  }
+  } // O multer-s3 já cuidou do upload. Verifique se o arquivo existe.
 
   if (!req.file) {
-    res.json({ error: "Post sem arquivo" });
+    res.json({ error: "Post sem arquivo ou tipo de arquivo inválido" });
     return;
-  }
+  } // O req.file.location já contém a URL do S3
 
-  const coverName = await handleCover(req.file);
-  if (!coverName) {
-    res.json({ error: "Erro ao fazer upload da imagem" });
-    return;
-  }
+  const coverUrl = (req.file as any).location;
 
   const slug = await createPostSlug(data.data.title);
 
@@ -97,7 +93,7 @@ export const addPost = async (req: ExtendedRequest, res: Response) => {
     title: data.data.title,
     tags: data.data.tags,
     body: data.data.body,
-    cover: coverName,
+    cover: coverUrl, // <--- Use a nova URL do S3
     status: "PUBLISHED",
   });
 
@@ -109,7 +105,7 @@ export const addPost = async (req: ExtendedRequest, res: Response) => {
       slug: newPost.slug,
       title: newPost.title,
       createdAt: newPost.createdAt,
-      cover: coverToUrl(newPost.cover),
+      cover: newPost.cover, // <--- coverToUrl não é mais necessária aqui
       tags: newPost.tags,
       authorName: author?.name,
       status: newPost.status,
@@ -138,9 +134,9 @@ export const editPost = async (req: ExtendedRequest, res: Response) => {
     return;
   }
 
-  let coverName: string | false = false;
+  let coverUrl: string | undefined = undefined;
   if (req.file) {
-    coverName = await handleCover(req.file);
+    coverUrl = (req.file as any).location; // <--- Use a URL do S3
   }
 
   const updatedPost = await updatePost(slug, {
@@ -149,7 +145,7 @@ export const editPost = async (req: ExtendedRequest, res: Response) => {
     title: data.data.title ?? undefined,
     tags: data.data.tags ?? undefined,
     body: data.data.body ?? undefined,
-    cover: coverName ? coverName : undefined,
+    cover: coverUrl,
   });
 
   const author = await getUserById(updatedPost.authorId);
@@ -180,7 +176,6 @@ export const removePost = async (req: ExtendedRequest, res: Response) => {
   await deletePost(post.slug);
   res.json({ sucesso: "O post foi excluído com sucesso" });
 };
-
 
 export const revertPost = async (req: ExtendedRequest, res: Response) => {
   const { slug } = req.params;
