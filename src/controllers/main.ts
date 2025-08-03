@@ -4,7 +4,6 @@ import {
   getPostswithSameTags,
   getPublishedPosts,
 } from "../services/post";
-import { coverToUrl } from "../utils/cover-to-url";
 
 export const getAllPosts: RequestHandler = async (req, res) => {
   let page = 1;
@@ -22,7 +21,7 @@ export const getAllPosts: RequestHandler = async (req, res) => {
     status: post.status,
     title: post.title,
     createdAt: post.createdAt,
-    cover: coverToUrl(post.cover),
+    cover: post.cover,
     authorName: post.author?.name,
     tags: post.tags,
     slug: post.slug,
@@ -44,7 +43,7 @@ export const getPost: RequestHandler = async (req, res) => {
       id: post.id,
       title: post.title,
       createdAt: post.createdAt,
-      cover: coverToUrl(post.cover),
+      cover: post.cover,
       authorName: post.author?.name,
       tags: post.tags,
       body: post.body,
@@ -62,7 +61,7 @@ export const getRelatedPosts: RequestHandler = async (req, res) => {
     id: post.id,
     title: post.title,
     createdAt: post.createdAt,
-    cover: coverToUrl(post.cover),
+    cover: post.cover,
     authorName: post.author?.name,
     tags: post.tags,
     slug: post.slug,

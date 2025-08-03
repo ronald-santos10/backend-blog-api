@@ -12,7 +12,6 @@ import {
   updatePost,
 } from "../services/post";
 import { getUserById } from "../services/user";
-import { coverToUrl } from "../utils/cover-to-url";
 
 export const getPosts = async (req: ExtendedRequest, res: Response) => {
   let page = 1;
@@ -31,7 +30,7 @@ export const getPosts = async (req: ExtendedRequest, res: Response) => {
     status: post.status,
     title: post.title,
     createdAt: post.createdAt,
-    cover: coverToUrl(post.cover),
+    cover: post.cover,
     authorName: post.author?.name,
     tags: post.tags,
     slug: post.slug,
@@ -54,7 +53,7 @@ export const getPost = async (req: ExtendedRequest, res: Response) => {
       id: post.id,
       title: post.title,
       createdAt: post.createdAt,
-      cover: coverToUrl(post.cover),
+      cover: post.cover,
       authorName: post.author?.name,
       tags: post.tags,
       body: post.body,
@@ -157,7 +156,7 @@ export const editPost = async (req: ExtendedRequest, res: Response) => {
       tags: updatedPost.tags,
       body: updatedPost.body,
       createdAt: updatedPost.createdAt,
-      cover: coverToUrl(updatedPost.cover),
+      cover: updatedPost.cover,
       authorName: author?.name,
     },
   });
