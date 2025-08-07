@@ -82,12 +82,16 @@ export const getAllPosts = async (page: number) => {
 };
 
 export const getPublishedPostsByTag = async (tag: string) => {
+  const terms = tag.split(",").map((t) => t.trim());
+
   return await prisma.post.findMany({
     where: {
       status: "PUBLISHED",
-      tags: {
-        contains: `${tag},`,
-      },
+      OR: terms.map((term) => ({
+        tags: {
+          contains: term,
+        },
+      })),
     },
     include: {
       author: {
