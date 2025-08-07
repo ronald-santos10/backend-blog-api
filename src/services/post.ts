@@ -81,7 +81,7 @@ export const getAllPosts = async (page: number) => {
   return posts;
 };
 
-export const getPublishedPostsByTag = async (tag: string) => {
+export const getPublishedPostsByTag = async (tag: string, limit?: number) => {
   const terms = tag.split(",").map((t) => t.trim());
 
   return await prisma.post.findMany({
@@ -103,8 +103,10 @@ export const getPublishedPostsByTag = async (tag: string) => {
     orderBy: {
       createdAt: "desc",
     },
+    take: limit,
   });
 };
+
 
 export const getPostBySlug = async (slug: string) => {
   return await prisma.post.findUnique({

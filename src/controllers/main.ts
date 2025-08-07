@@ -72,13 +72,14 @@ export const getRelatedPosts: RequestHandler = async (req, res) => {
 
 export const getPostsByTag: RequestHandler = async (req, res) => {
   const { tag } = req.params;
+  const limit = parseInt(req.query.limit as string) || undefined;
 
   if (!tag) {
     return res.status(400).json({ error: "Tag não informada." });
   }
 
   try {
-    const posts = await getPublishedPostsByTag(tag);
+    const posts = await getPublishedPostsByTag(tag, limit);
 
     const postsToReturn = posts.map((post) => ({
       id: post.id,
@@ -93,7 +94,6 @@ export const getPostsByTag: RequestHandler = async (req, res) => {
 
     res.json({ posts: postsToReturn });
   } catch (error) {
-    console.error("Erro ao buscar posts por tag:", error);
     res.status(500).json({ error: "Erro interno ao buscar posts por tag." });
   }
 };
