@@ -7,28 +7,33 @@ import {
 } from "../services/post";
 
 export const getAllPosts: RequestHandler = async (req, res) => {
-  let page = 1;
-  if (req.query.page) {
-    page = parseInt(req.query.page as string);
-    if (page <= 0) {
-      res.json({ error: "Página inexistente" });
-    }
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 9;
+
+  if (page <= 0) {
+    return res.status(400).json({ error: "Página inexistente" });
   }
 
-  let posts = await getPublishedPosts(page);
+  try {
+    const posts = await getPublishedPosts(page, limit);
 
-  const postsToReturn = posts.map((post) => ({
-    id: post.id,
-    status: post.status,
-    title: post.title,
-    createdAt: post.createdAt,
-    cover: post.cover,
-    authorName: post.author?.name,
-    tags: post.tags,
-    slug: post.slug,
-  }));
-  res.json({ posts: postsToReturn, page });
+    const postsToReturn = posts.map((post) => ({
+      id: post.id,
+      status: post.status,
+      title: post.title,
+      createdAt: post.createdAt,
+      cover: post.cover,
+      authorName: post.author?.name,
+      tags: post.tags,
+      slug: post.slug,
+    }));
+
+    res.json({ posts: postsToReturn, page });
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar posts" });
+  }
 };
+
 
 export const getPost: RequestHandler = async (req, res) => {
   const { slug } = req.params;

@@ -2,9 +2,8 @@ import slug from "slug";
 import { prisma } from "../libs/prisma";
 import { Prisma } from "@prisma/client";
 
-export const getPublishedPosts = async (page: number) => {
-  let perPage = 9;
-  if (page <= 0) return [];
+export const getPublishedPosts = async (page: number, limit: number) => {
+  if (page <= 0 || limit <= 0) return [];
 
   const posts = await prisma.post.findMany({
     where: {
@@ -20,8 +19,8 @@ export const getPublishedPosts = async (page: number) => {
     orderBy: {
       createdAt: "desc",
     },
-    take: perPage,
-    skip: (page - 1) * perPage,
+    take: limit,
+    skip: (page - 1) * limit,
   });
 
   return posts;
@@ -106,7 +105,6 @@ export const getPublishedPostsByTag = async (tag: string, limit?: number) => {
     take: limit,
   });
 };
-
 
 export const getPostBySlug = async (slug: string) => {
   return await prisma.post.findUnique({
