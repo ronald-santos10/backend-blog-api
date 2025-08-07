@@ -81,6 +81,27 @@ export const getAllPosts = async (page: number) => {
   return posts;
 };
 
+export const getPublishedPostsByTag = async (tag: string) => {
+  return await prisma.post.findMany({
+    where: {
+      status: "PUBLISHED",
+      tags: {
+        contains: `${tag},`,
+      },
+    },
+    include: {
+      author: {
+        select: {
+          name: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+};
+
 export const getPostBySlug = async (slug: string) => {
   return await prisma.post.findUnique({
     where: { slug },

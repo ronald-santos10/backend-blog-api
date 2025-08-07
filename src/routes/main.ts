@@ -10,3 +10,4 @@ mainRoutes.get("/ping", (req, res) => {
 mainRoutes.get("/posts", mainController.getAllPosts);
 mainRoutes.get("/posts/:slug", mainController.getPost);
 mainRoutes.get("/posts/:slug/related", mainController.getRelatedPosts);
+mainRoutes.get("/tags/:tag/posts", mainController.getPostsByTag);

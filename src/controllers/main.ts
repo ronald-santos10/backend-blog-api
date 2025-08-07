@@ -3,6 +3,7 @@ import {
   getPostBySlug,
   getPostswithSameTags,
   getPublishedPosts,
+  getPublishedPostsByTag,
 } from "../services/post";
 
 export const getAllPosts: RequestHandler = async (req, res) => {
@@ -67,4 +68,32 @@ export const getRelatedPosts: RequestHandler = async (req, res) => {
     slug: post.slug,
   }));
   res.json({ posts: postsToReturn });
+};
+
+export const getPostsByTag: RequestHandler = async (req, res) => {
+  const { tag } = req.params;
+
+  if (!tag) {
+    return res.status(400).json({ error: "Tag não informada." });
+  }
+
+  try {
+    const posts = await getPublishedPostsByTag(tag);
+
+    const postsToReturn = posts.map((post) => ({
+      id: post.id,
+      status: post.status,
+      title: post.title,
+      createdAt: post.createdAt,
+      cover: post.cover,
+      authorName: post.author?.name,
+      tags: post.tags,
+      slug: post.slug,
+    }));
+
+    res.json({ posts: postsToReturn });
+  } catch (error) {
+    console.error("Erro ao buscar posts por tag:", error);
+    res.status(500).json({ error: "Erro interno ao buscar posts por tag." });
+  }
 };
